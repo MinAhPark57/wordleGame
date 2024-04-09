@@ -21,3 +21,19 @@ footer {
   width: 60px;
   height: 60px;
 }
+
+@keyframes icons-둥-둥 {
+  0% {
+    transform: translateY(0px);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.애니메이션 {
+  animation: 1s icons-둥-둥 infinite;
+}

@@ -18,6 +18,8 @@ function appStart() {
     div.innerText = "게임이 종료됐습니다.";
     div.style =
       "display:flex; justify-content:center; align-items:center; position:absolute; top:40vh; left:40vw; background-color:black; color:white; width:200px; height:100px;"; //css 직접 적용, 이렇게 넣으면 오타 나기도 쉽고 추천하는 방법은 아님
+
+    div.classList.add("애니메이션");
     document.body.appendChild(div);
   };
 
