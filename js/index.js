@@ -42,15 +42,27 @@ function appStart() {
       );
       const inputLetter = block.innerText;
       const answerLetter = answer[i];
+
+      const keyboardBlock = document.querySelector(
+        `.keyboard-column[data-key='${inputLetter}']`
+      );
+
       if (inputLetter === answerLetter) {
         //정답글자와 입력한 글자가 같으면 초록색
         block.style.background = "#6AAA64";
+        keyboardBlock.style.background = "#6AAA64";
         맞은개수 += 1;
-      } else if (answer.includes(inputLetter))
+      } else if (answer.includes(inputLetter)) {
         block.style.background = "#C9B458";
+        keyboardBlock.style.background = "#C9B458";
+      }
       //정답 안에 입력한 글자가 포함되어 있으면 노란색
-      else block.style.background = "#787C7e";
+      else {
+        block.style.background = "#787C7e";
+        keyboardBlock.style.background = "#787C7e";
+      }
       block.style.color = "white";
+      keyboardBlock.style.color = "white";
     }
 
     if (맞은개수 === 5) gameover(); //게임종료
@@ -65,6 +77,15 @@ function appStart() {
       preBlock.innerText = "";
     }
     if (index !== 0) index -= 1;
+  };
+
+  const keyclick = (event) => {
+    const thisBlock = document.querySelector(
+      `.board-block[data-index='${attempts}${index}']`
+    );
+    const letter = event.target.innerText;
+    thisBlock.innerText = letter;
+    index += 1;
   };
 
   const handlekeydown = (event) => {
@@ -103,7 +124,16 @@ function appStart() {
   };
 
   startTimer();
+
   window.addEventListener("keydown", handlekeydown);
+
+  // 모든 요소를 선택합니다.
+  let btns = document.querySelectorAll(".keyboard-column");
+
+  // 각 요소에 대해 반복하여 클릭 이벤트 리스너를 추가합니다.
+  btns.forEach((btn) => {
+    btn.addEventListener("click", keyclick);
+  });
 }
 
 appStart();
