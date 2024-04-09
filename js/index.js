@@ -10,16 +10,29 @@
 const answer = "APPLE";
 let index = 0;
 let attempts = 0;
+let timer;
 
 function appStart() {
+  const displayGameover = () => {
+    const div = document.createElement("div");
+    div.innerText = "게임이 종료됐습니다.";
+    div.style =
+      "display:flex; justify-content:center; align-items:center; position:absolute; top:40vh; left:40vw; background-color:black; color:white; width:200px; height:100px;"; //css 직접 적용, 이렇게 넣으면 오타 나기도 쉽고 추천하는 방법은 아님
+    document.body.appendChild(div);
+  };
+
   const gameover = () => {
     window.removeEventListener("keydown", handlekeydown); //이벤트 제거
+    displayGameover();
+    clearInterval(timer); //타이머 인터벌 끝내기. timer변수에 저장한 인터벌 아이디 호출
   };
+
   const nextLine = () => {
     if (attempts === 6) return; //마지막줄까지 입력했으면 그대로 종료
     attempts += 1;
     index = 0;
   };
+
   const handleEnterkey = () => {
     let 맞은개수 = 0;
     //정답확인
@@ -43,6 +56,17 @@ function appStart() {
     if (맞은개수 === 5) gameover(); //게임종료
     else nextLine(); //다음줄로 넘기기
   };
+
+  const handleBackspace = () => {
+    if (index > 0) {
+      const preBlock = document.querySelector(
+        `.board-block[data-index='${attempts}${index - 1}']`
+      );
+      preBlock.innerText = "";
+    }
+    if (index !== 0) index -= 1;
+  };
+
   const handlekeydown = (event) => {
     const key = event.key.toUpperCase(); //대문자로
     const keyCode = event.keyCode;
@@ -50,9 +74,11 @@ function appStart() {
       `.board-block[data-index='${attempts}${index}']`
     );
 
+    //백스페이스 눌렀을 땐 지워주기
+    if (event.key === "Backspace") handleBackspace();
     //마지막칸 입력 후에는 엔터키만 눌리고 정답확인
-    if (index === 5) {
-      if (event.key === "Enter") handleEnterkey();
+    else if (index === 5) {
+      if (event.key === "Enter") handleEnterkey(thisBlock);
       else return;
     }
     //알파벳만 입력 되도록 하기
@@ -62,6 +88,21 @@ function appStart() {
     }
   };
 
+  const startTimer = () => {
+    const 시작_시간 = new Date(); //선언되는 순간 변수에 저장됨
+    function setTime() {
+      const 현재_시간 = new Date();
+      const 흐른_시간 = new Date(현재_시간 - 시작_시간);
+      const 분 = 흐른_시간.getMinutes().toString().padStart(2, "0"); //padStart 사용하기 위해 문자열로
+      const 초 = 흐른_시간.getSeconds().toString().padStart(2, "0");
+      const timeDiv = document.querySelector("#timer");
+
+      timeDiv.innerText = `${분}:${초}`; // 백틱(`) 사용하면 변수를 문자열에 넣을 수 있다
+    }
+    timer = setInterval(setTime, 1000); //timer변수에 인터벌 아이디 저장
+  };
+
+  startTimer();
   window.addEventListener("keydown", handlekeydown);
 }
 
