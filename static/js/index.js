@@ -7,7 +7,6 @@
 // (선택) 키보드에도 동일하게 표시
 // (선택) 키보드 입력도 가능하게
 
-const answer = "APPLE";
 let index = 0;
 let attempts = 0;
 let timer;
@@ -35,8 +34,13 @@ function appStart() {
     index = 0;
   };
 
-  const handleEnterkey = () => {
+  const handleEnterkey = async () => {
     let 맞은개수 = 0;
+
+    //서버에서 정답 받아오는 코드
+    const 응답 = await fetch("/answer"); //answer라는 경로로 요청 보냄
+    const answer = await 응답.json();
+
     //정답확인
     for (let i = 0; i < 5; i++) {
       const block = document.querySelector(
